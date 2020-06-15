@@ -126,6 +126,9 @@ namespace NoticeForm
                                 string message = string.Format(displayMessage, Enum.GetName(typeof(SiteType), site), month, day, "예약가능함. ○○○○○○○○○○○○○○○○○○○○");
                                 DisplayTextBox(message);
 
+                                // 텔레그램
+                                TelegramHelper.SendMessageByTelegramBot(string.Format("{0}- {1}", message, url));
+                                
                                 //if (_reservationPossible < _showWebCount)
                                 {
                                     //System.Diagnostics.Process.Start(url);
