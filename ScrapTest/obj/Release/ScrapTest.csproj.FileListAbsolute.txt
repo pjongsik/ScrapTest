@@ -1,6 +1,0 @@
-D:\workspace_vs2012\ScrapTest\ScrapTest\bin\Release\ScrapTest.exe.config
-D:\workspace_vs2012\ScrapTest\ScrapTest\bin\Release\ScrapTest.exe
-D:\workspace_vs2012\ScrapTest\ScrapTest\bin\Release\ScrapTest.pdb
-D:\workspace_vs2012\ScrapTest\ScrapTest\obj\Release\ScrapTest.exe
-D:\workspace_vs2012\ScrapTest\ScrapTest\obj\Release\ScrapTest.pdb
-D:\workspace_vs2012\ScrapTest\ScrapTest\obj\Release\ScrapTest.csprojResolveAssemblyReference.cache
