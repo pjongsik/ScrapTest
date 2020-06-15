@@ -1,0 +1,5 @@
+D:\workspace_vs2012\ScrapTest\ScrapTest\bin\Debug\ScrapTest.exe
+D:\workspace_vs2012\ScrapTest\ScrapTest\bin\Debug\ScrapTest.pdb
+D:\workspace_vs2012\ScrapTest\ScrapTest\obj\Debug\ScrapTest.exe
+D:\workspace_vs2012\ScrapTest\ScrapTest\obj\Debug\ScrapTest.pdb
+D:\workspace_vs2012\ScrapTest\ScrapTest\bin\Debug\ScrapTest.exe.config
