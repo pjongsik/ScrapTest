@@ -44,6 +44,7 @@
             this.btnDel = new System.Windows.Forms.Button();
             this.txtGapTime = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.chkPassAlarm = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -185,11 +186,22 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "초";
             // 
+            // chkPassAlarm
+            // 
+            this.chkPassAlarm.AutoSize = true;
+            this.chkPassAlarm.Location = new System.Drawing.Point(618, 23);
+            this.chkPassAlarm.Name = "chkPassAlarm";
+            this.chkPassAlarm.Size = new System.Drawing.Size(88, 16);
+            this.chkPassAlarm.TabIndex = 9;
+            this.chkPassAlarm.Text = "알림창 생략";
+            this.chkPassAlarm.UseVisualStyleBackColor = true;
+            // 
             // frmSJH
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(726, 452);
+            this.Controls.Add(this.chkPassAlarm);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtGapTime);
             this.Controls.Add(this.listSelection);
@@ -226,6 +238,7 @@
         private System.Windows.Forms.Button btnDel;
         private System.Windows.Forms.TextBox txtGapTime;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox chkPassAlarm;
     }
 }
 

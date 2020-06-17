@@ -67,6 +67,7 @@ namespace NoticeForm
        
         private void DoWork()
         {
+            bool passAlarm = chkPassAlarm.Checked;
             int _checkCount = 0;
 
             while (_keepRunning)
@@ -128,20 +129,22 @@ namespace NoticeForm
 
                                 // 텔레그램
                                 TelegramHelper.SendMessageByTelegramBot(string.Format("{0}- {1}", message, url));
-                                
-                                //if (_reservationPossible < _showWebCount)
-                                {
-                                    //System.Diagnostics.Process.Start(url);
 
-                                    //ShowAlarmForm(url, message);
+                                //if (_reservationPossible < _showWebCount)
+                                //{
+                                //System.Diagnostics.Process.Start(url);
+
+                                //ShowAlarmForm(url, message);
+                                if (passAlarm == false)
+                                {
                                     if (MessageBox.Show(message, "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
                                     {
                                         // 바로가기 
                                         System.Diagnostics.Process.Start(url);
                                     }
-
-                                    // Thread.Sleep(10000);
                                 }
+                                    // Thread.Sleep(10000);
+                               // }
 
                                 _reservationPossible++;
                             }
