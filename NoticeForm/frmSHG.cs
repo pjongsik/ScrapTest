@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace NoticeForm
 {
-    public partial class frmSJH : Form
+    public partial class frmSHG : Form
     {
         string _month = "8";
         int _year = 2019;
@@ -20,7 +20,7 @@ namespace NoticeForm
         const int _showWebCount = 2;
        // frmNotice _frm= new frmNotice();
 
-        public frmSJH()
+        public frmSHG()
         {
             InitializeComponent();
            
@@ -42,9 +42,6 @@ namespace NoticeForm
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
-            //
-            //DoProcess();
         }
 
         Thread _th1 = null;
@@ -71,7 +68,7 @@ namespace NoticeForm
 
             while (_keepRunning)
             {
-                int gapTime = 3 * 1000;
+                int gapTime = 3;
 
                 if (int.TryParse(txtGapTime.Text, out gapTime) == false)
                     gapTime = 3;
@@ -80,25 +77,40 @@ namespace NoticeForm
 
                 foreach (var data in _selectedList)
                 {
-                    
                     // 스크래핑함
-                    int 숙박일 = 1; // 1박
-                    string 시작일 = new DateTime(data.Year, data.Month, data.Day).ToString("yyyyMMdd");
-                    string 종료일 = new DateTime(data.Year, data.Month, data.Day).AddDays(숙박일).ToString("yyyyMMdd");
-
+                    string 검색월 = new DateTime(data.Year, data.Month, data.Day).ToString("yyyyMM");
+                    
                     int[] 구역 = new int[] { 1 };
                     if (data.Site == SiteType.전체)
                         구역 = new int[] { 1, 2, 3, 4, 5 };
                     else
                         구역 = new int[] { (int)data.Site };
 
+                    // 1. 날짜 찾기 
+                    // 2. 구역 찾기 
+
                     foreach (var site in 구역)
                     {
-                        string url = string.Format(string.Format(@"https://gwgs.ticketplay.zone/portal/realtime/productSelect?room_area_no={0}&stay_cnt={1}&check_in={2}&check_out={3}", site, 숙박일, 시작일, 종료일));
+                        string url = string.Format(string.Format(@"https://camping.gtdc.or.kr/DZ_reservation/reserCamping.php?xch=reservation&xid=camping_reservation&searchDate={0}", 검색월));
                         string html = ScrapTest.Scrap.Scraping(url, ScrapTest.Method.GET, "UTF-8");
                         
                         int day = data.Day;
                         int month = data.Month;
+
+                        // 구분자
+                        const string startBlockTag = "<TD style='padding:5px;'>";
+                        const string dayTag1 = "<span class='fl b fs11pt txt-dark'>"; // 평일
+                        const string dayTag2 = "<span class='fl b fs11pt txt-red'>";  // 주말/휴일
+                        const string dayEndTag = "</span>";
+
+                        const string siteTag = "mr5'></i>";
+                        const string siteEndTag = "</span>";  // 앞에 (숫자) 남은것 (0) 이 아니면 자리있음으로 확인하면됨
+
+                        //
+
+
+
+
 
                         string displayMessage = "{1}월 {2}일 ({0}) --  {3}";
 

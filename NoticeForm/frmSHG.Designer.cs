@@ -1,6 +1,6 @@
 ﻿namespace NoticeForm
 {
-    partial class frmSJH
+    partial class frmSHG
     {
         /// <summary>
         /// 필수 디자이너 변수입니다.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSJH));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSHG));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -128,11 +128,11 @@
             this.cbSite.FormattingEnabled = true;
             this.cbSite.Items.AddRange(new object[] {
             "전체",
-            "통나무",
-            "1구역",
-            "2구역",
-            "3구역",
-            "4구역"});
+            "A",
+            "B",
+            "C",
+            "D",
+            "E"});
             this.cbSite.Location = new System.Drawing.Point(14, 20);
             this.cbSite.Name = "cbSite";
             this.cbSite.Size = new System.Drawing.Size(84, 20);
@@ -196,7 +196,7 @@
             this.chkPassAlarm.Text = "알림창 생략";
             this.chkPassAlarm.UseVisualStyleBackColor = true;
             // 
-            // frmSJH
+            // frmSHG
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -214,8 +214,8 @@
             this.Controls.Add(this.txtday);
             this.Controls.Add(this.richTextBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "frmSJH";
-            this.Text = "송지호";
+            this.Name = "frmSHG";
+            this.Text = "솔향기";
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
