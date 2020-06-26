@@ -12,14 +12,14 @@ namespace NoticeForm
 {
     public partial class SongJiHoForm : Form
     {
-        SelectionData _selectionData = null;
+        SelectionBase _selectionData = null;
 
         public SongJiHoForm()
         {
             InitializeComponent();
         }
 
-        public SongJiHoForm(SelectionData data)
+        public SongJiHoForm(SelectionBase data)
         {
             InitializeComponent();
 

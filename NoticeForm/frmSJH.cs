@@ -171,14 +171,6 @@ namespace NoticeForm
             }
         }
 
-        private void ShowAlarmForm(string url, string message)
-        {
-            using (var frm = new frmNotice(url, message))
-            {
-                frm.ShowDialog();
-            }
-        }
-
         void CrearDisplayText()
         {
             if (richTextBox1.InvokeRequired)
@@ -274,7 +266,7 @@ namespace NoticeForm
             _th1 = null;
         }
 
-        List<SelectionData> _selectedList = new List<SelectionData>();
+        List<SelectionBase> _selectedList = new List<SelectionBase>();
         /// <summary>
         /// 추가        /// 
         /// </summary>
@@ -305,7 +297,7 @@ namespace NoticeForm
 
             SiteType stieType = (SiteType)cbSite.SelectedIndex;
             
-            _selectedList.Add(new SelectionData()
+            _selectedList.Add(new SelectionBase()
             {
                 Year = year,
                 Month = month,
