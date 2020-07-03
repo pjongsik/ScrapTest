@@ -66,7 +66,7 @@
             this.notifyIcon1.BalloonTipTitle = "예약알림";
             this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "송지호 예약 알림";
+            this.notifyIcon1.Text = "연곡솔향기 예약 알림";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
             // 
