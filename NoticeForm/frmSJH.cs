@@ -100,7 +100,7 @@ namespace NoticeForm
                         int day = data.Day;
                         int month = data.Month;
 
-                        string displayMessage = "{1}월 {2}일 ({0}) --  {3}";
+                        string displayMessage = "송지호 : {1}월 {2}일 ({0}) --  {3}";
 
                         //송지호 오토캠핑장
                         string title = "송지호 오토캠핑장";

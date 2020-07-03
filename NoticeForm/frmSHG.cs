@@ -73,7 +73,8 @@ namespace NoticeForm
 
                 var monthList = _selectedList.GroupBy(x => new { x.Year, x.Month }).Select(x => new { x.Key.Year, x.Key.Month }).ToList();
 
-                string displayMessage = "{1}월 {2}일 ({0}) --  {3}";
+                string title = "솔향기캠핑장";
+                string displayMessage = "솔향기캠핑장 : {1}월 {2}일 ({0}) --  {3}";
                 string message = string.Empty;
 
                 foreach (var data in monthList)
@@ -83,8 +84,7 @@ namespace NoticeForm
                     string url = string.Format(string.Format(@"https://camping.gtdc.or.kr/DZ_reservation/reserCamping.php?xch=reservation&xid=camping_reservation&searchDate={0}", 검색월));
                     string html = ScrapTest.Scrap.Scraping(url, ScrapTest.Method.GET, "UTF-8");
                     string remainCount = string.Empty;
-
-                    string title = "솔향기캠핑장";
+                    
                     if (html.IndexOf(title) <= 0)
                     {
                         // 페이지 읽기 오류
