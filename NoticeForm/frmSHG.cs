@@ -71,7 +71,8 @@ namespace NoticeForm
 
                 gapTime *= 1000;
 
-                var monthList = _selectedList.GroupBy(x => new { x.Year, x.Month }).Select(x => new { x.Key.Year, x.Key.Month }).OrderBy(x=> new { x.Year, x.Month });
+                var monthList = _selectedList.GroupBy(x => new { x.Year, x.Month }).Select(x => new { x.Key.Year, x.Key.Month }).ToList();
+
                 string displayMessage = "{1}월 {2}일 ({0}) --  {3}";
                 string message = string.Empty;
 
@@ -102,8 +103,8 @@ namespace NoticeForm
                     {
                         // 구분자
                         const string startBlockTag = "<TD style='padding:5px;'>";
-                        const string dayTag1 = "<span class='fl b fs11pt txt-dark'>{0}"; // 평일
-                        const string dayTag2 = "<span class='fl b fs11pt txt-red'>{0}";  // 주말/휴일
+                        const string dayTag1 = "<span class='fl b fs11pt txt-dark'>{0}</span>"; // 평일
+                        const string dayTag2 = "<span class='fl b fs11pt txt-red'>{0}</span>";  // 주말/휴일
                         
                         const string siteTag = "mr5'></i>{0}";
                         const string siteEndTag = "</span>";  // 앞에 (숫자) 남은것 (0) 이 아니면 자리있음으로 확인하면됨
@@ -135,33 +136,39 @@ namespace NoticeForm
 
                         foreach (var selectedSite in sites)
                         {
-
-                            temp = temp.Substring(temp.IndexOf(string.Format(siteTag, selectedSite)));
-
-                            remainCount = temp.Substring(0, temp.IndexOf(siteEndTag));
-
-                            remainCount = remainCount.Substring(remainCount.IndexOf("(") + 1, remainCount.IndexOf(")") - remainCount.IndexOf("(") - 1);
-
-                            Console.WriteLine("{1}-{2} [{3}] remainCount : {0}", remainCount, searchDatre.Month, searchDatre.Day, selectedSite);
-
-                            if ("0".Equals(remainCount) == true) // 만석
+                            if (temp.IndexOf(string.Format(siteTag, selectedSite)) < 0)
                             {
-                                message = string.Format(displayMessage, selectedSite, searchDatre.Month, searchDatre.Day, "예약완료. XXXXXXXXXXXXXXXXXXXXXXXXX");
+                                message = string.Format(displayMessage, selectedSite, searchDatre.Month, searchDatre.Day, "조회오류 - 아직 예약전이거나, 해당사이트 정보를 찾을수 없습니다.");
                             }
                             else
                             {
-                                // 가능
-                                message = string.Format(displayMessage, selectedSite, searchDatre.Month, searchDatre.Day, "예약가능함. ○○○○○○○○○○○○○○○○");
+                                temp = temp.Substring(temp.IndexOf(string.Format(siteTag, selectedSite)));
 
-                                // 텔레그램
-                                TelegramHelper.SendMessageByTelegramBot(string.Format("{0}- {1}", message, url));
+                                remainCount = temp.Substring(0, temp.IndexOf(siteEndTag));
 
-                                if (chkPassAlarm.Checked == false)
+                                remainCount = remainCount.Substring(remainCount.IndexOf("(") + 1, remainCount.IndexOf(")") - remainCount.IndexOf("(") - 1);
+
+                                Console.WriteLine("{1}-{2} [{3}] remainCount : {0}", remainCount, searchDatre.Month, searchDatre.Day, selectedSite);
+
+                                if ("0".Equals(remainCount) == true) // 만석
                                 {
-                                    if (MessageBox.Show(message, "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                    message = string.Format(displayMessage, selectedSite, searchDatre.Month, searchDatre.Day, "예약완료. XXXXXXXXXXXXXXXXXXXXXXXXX");
+                                }
+                                else
+                                {
+                                    // 가능
+                                    message = string.Format(displayMessage, selectedSite, searchDatre.Month, searchDatre.Day, "예약가능함. ○○○○○○○○○○○○○○○○");
+
+                                    // 텔레그램
+                                    TelegramHelper.SendMessageByTelegramBot(string.Format("{0}- {1}", message, url));
+
+                                    if (chkPassAlarm.Checked == false)
                                     {
-                                        // 바로가기 
-                                        System.Diagnostics.Process.Start(url);
+                                        if (MessageBox.Show(message, "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                        {
+                                            // 바로가기 
+                                            System.Diagnostics.Process.Start(url);
+                                        }
                                     }
                                 }
                             }
