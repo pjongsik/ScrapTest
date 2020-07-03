@@ -66,7 +66,7 @@ namespace ScrapTest
                 using (HttpWebResponse wRes = (HttpWebResponse)wReq.GetResponse())
                 {
                     HttpStatusCode statusCode = wRes.StatusCode;
-                    Console.WriteLine(" statusCode : {0}", statusCode);
+                    ///Console.WriteLine(" statusCode : {0}", statusCode);
 
                     Stream respPostStream = wRes.GetResponseStream();
                     using (StreamReader readerPost = new StreamReader(respPostStream, Encoding.GetEncoding(encoding), true))
@@ -75,7 +75,7 @@ namespace ScrapTest
                     }
                 }
 
-                Console.WriteLine(resResult);
+                //Console.WriteLine(resResult);
             }
             catch (Exception ex)
             {

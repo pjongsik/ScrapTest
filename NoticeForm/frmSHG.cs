@@ -12,14 +12,10 @@ namespace NoticeForm
 {
     public partial class frmSHG : Form
     {
-        string _month = "8";
-        int _year = 2019;
-        int _day = 0;
         bool _keepRunning = false;
         int _reservationPossible = 0;
         const int _showWebCount = 2;
-       // frmNotice _frm= new frmNotice();
-
+       
         public frmSHG()
         {
             InitializeComponent();
@@ -76,6 +72,8 @@ namespace NoticeForm
                 gapTime *= 1000;
 
                 var monthList = _selectedList.GroupBy(x => new { x.Year, x.Month }).Select(x => new { x.Key.Year, x.Key.Month }).OrderBy(x=> new { x.Year, x.Month });
+                string displayMessage = "{1}월 {2}일 ({0}) --  {3}";
+                string message = string.Empty;
 
                 foreach (var data in monthList)
                 {
@@ -83,10 +81,23 @@ namespace NoticeForm
                     string 검색월 = new DateTime(data.Year, data.Month, 1).ToString("yyyyMM");
                     string url = string.Format(string.Format(@"https://camping.gtdc.or.kr/DZ_reservation/reserCamping.php?xch=reservation&xid=camping_reservation&searchDate={0}", 검색월));
                     string html = ScrapTest.Scrap.Scraping(url, ScrapTest.Method.GET, "UTF-8");
+                    string remainCount = string.Empty;
+
+                    string title = "솔향기캠핑장";
+                    if (html.IndexOf(title) <= 0)
+                    {
+                        // 페이지 읽기 오류
+                        // 페이지 오류
+                        DisplayTextBox(DateTime.Now.ToString("\r\n yyyy-MM-dd [HH:mm:ss] \t"));
+
+                        message = string.Format(" {0}년{1}월 - 조회중 오류가 발생하였습니다. !!!!!!!!!!!", data.Year, data.Month);
+                        DisplayTextBox(message);
+
+                        continue;
+                    }
 
                     // 1. 날짜 찾기 
                     // 2. 구역 찾기 
-
                     foreach (var searchDatre in _selectedList.Where(x => x.Year == data.Year && x.Month == data.Month).OrderBy(x=> x.Day))
                     {
                         // 구분자
@@ -99,76 +110,67 @@ namespace NoticeForm
 
                         //
                         string temp = string.Empty;
-                        while (html.IndexOf(startBlockTag) > 0)
-                        {
-                            html = html.Substring(html.IndexOf(startBlockTag));
 
-                            // 날짜 찾기
-                            if (html.IndexOf(string.Format(dayTag1, searchDatre.Day)) > 0)
-                                html = html.Substring(html.IndexOf(string.Format(dayTag1, searchDatre.Day)));
-                            else
-                                html = html.Substring(html.IndexOf(string.Format(dayTag2, searchDatre.Day)));
+                        // 날짜 블럭 시작부터로
+                        html = html.Substring(html.IndexOf(startBlockTag));
+                        
+                        // 날짜 찾기
+                        if (html.IndexOf(string.Format(dayTag1, searchDatre.Day)) > 0)
+                            html = html.Substring(html.IndexOf(string.Format(dayTag1, searchDatre.Day)));
+                        else
+                            html = html.Substring(html.IndexOf(string.Format(dayTag2, searchDatre.Day)));
 
-                            // 해당 날짜 블럭 구하기
-                            if (html.IndexOf(startBlockTag) > 0)
-                                temp = html.Substring(0, html.IndexOf(startBlockTag));
-                            else
-                                temp = html;
-
-                            //
-                            temp.IndexOf(string.Format(siteTag, searchDatre.Site));
-
-
-
-                        }
-
+                        // 해당 날짜 블럭 구하기
+                        if (html.IndexOf(startBlockTag) > 0)
+                            temp = html.Substring(0, html.IndexOf(startBlockTag));
+                        else
+                            temp = html;
 
                         //
-
-                        string displayMessage = "{1}월 {2}일 ({0}) --  {3}";
-
-                        string title = "솔향기캠핑장";
-                        if (html.IndexOf(title) <= 0)
+                        var sites = new string[] { "A", "B", "C", "D", "E" };
+                        if ((int)searchDatre.Site != 0) // 전체
                         {
-                            // 페이지 오류
-                            DisplayTextBox(DateTime.Now.ToString("\r\n yyyy-MM-dd [HH:mm:ss] \t"));
-
-                            string message = string.Empty; // string.Format(displayMessage, Enum.GetName(typeof(SiteType), site), month, day, "조회중 오류가 발생하였습니다. !!!!!!!!!!!!!!!!!!!");
-                            DisplayTextBox(message);
+                            sites = new string[] { searchDatre.Site.ToString() };
                         }
-                        else
+
+                        foreach (var selectedSite in sites)
                         {
 
+                            temp = temp.Substring(temp.IndexOf(string.Format(siteTag, selectedSite)));
 
+                            remainCount = temp.Substring(0, temp.IndexOf(siteEndTag));
 
-                          
-                            DisplayTextBox(DateTime.Now.ToString("\r\n yyyy-MM-dd [HH:mm:ss] \t"));
+                            remainCount = remainCount.Substring(remainCount.IndexOf("(") + 1, remainCount.IndexOf(")") - remainCount.IndexOf("(") - 1);
 
-                            string message = string.Empty; /// string.Format(displayMessage, Enum.GetName(typeof(SiteType), site), month, day, "예약가능함. ○○○○○○○○○○○○○○○○○○○○");
-                            DisplayTextBox(message);
+                            Console.WriteLine("{1}-{2} [{3}] remainCount : {0}", remainCount, searchDatre.Month, searchDatre.Day, selectedSite);
 
-                            // 텔레그램
-                            TelegramHelper.SendMessageByTelegramBot(string.Format("{0}- {1}", message, url));
-
-                            if (chkPassAlarm.Checked == false)
+                            if ("0".Equals(remainCount) == true) // 만석
                             {
-                                if (MessageBox.Show(message, "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                message = string.Format(displayMessage, selectedSite, searchDatre.Month, searchDatre.Day, "예약완료. XXXXXXXXXXXXXXXXXXXXXXXXX");
+                            }
+                            else
+                            {
+                                // 가능
+                                message = string.Format(displayMessage, selectedSite, searchDatre.Month, searchDatre.Day, "예약가능함. ○○○○○○○○○○○○○○○○");
+
+                                // 텔레그램
+                                TelegramHelper.SendMessageByTelegramBot(string.Format("{0}- {1}", message, url));
+
+                                if (chkPassAlarm.Checked == false)
                                 {
-                                    // 바로가기 
-                                    System.Diagnostics.Process.Start(url);
+                                    if (MessageBox.Show(message, "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                    {
+                                        // 바로가기 
+                                        System.Diagnostics.Process.Start(url);
+                                    }
                                 }
                             }
-                              
-                            _reservationPossible++;
-                         
-                          // 없음
+
                             DisplayTextBox(DateTime.Now.ToString("\r\n yyyy-MM-dd [HH:mm:ss] \t"));
-                            //DisplayTextBox(string.Format(displayMessage, Enum.GetName(typeof(SiteType), site), month, day, "예약완료. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
-
-                            _reservationPossible = 0;
-                         
+                            DisplayTextBox(message);
                         }
-
+                      
+                        
                         _checkCount++;
                     }
                 }
@@ -279,7 +281,7 @@ namespace NoticeForm
             _th1 = null;
         }
 
-        List<SelectionBase> _selectedList = new List<SelectionBase>();
+        List<SelectionSHG> _selectedList = new List<SelectionSHG>();
         /// <summary>
         /// 추가        /// 
         /// </summary>
@@ -308,9 +310,9 @@ namespace NoticeForm
             if (new DateTime(year, month, day) <= DateTime.Now.Date)
                 MessageBox.Show("날짜 선택오류 - 내일부터 선택가능~!");
 
-            SiteType stieType = (SiteType)cbSite.SelectedIndex;
+            SiteTypeSHG stieType = (SiteTypeSHG)cbSite.SelectedIndex;
             
-            _selectedList.Add(new SelectionBase()
+            _selectedList.Add(new SelectionSHG()
             {
                 Year = year,
                 Month = month,
