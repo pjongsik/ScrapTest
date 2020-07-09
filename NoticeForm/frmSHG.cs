@@ -69,6 +69,7 @@ namespace NoticeForm
                 if (int.TryParse(txtGapTime.Text, out gapTime) == false)
                     gapTime = 3;
 
+
                 gapTime *= 1000;
 
                 var monthList = _selectedList.GroupBy(x => new { x.Year, x.Month }).Select(x => new { x.Key.Year, x.Key.Month }).ToList();
