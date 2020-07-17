@@ -45,6 +45,7 @@
             this.txtGapTime = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chkPassAlarm = new System.Windows.Forms.CheckBox();
+            this.chkShowForm = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -189,18 +190,29 @@
             // chkPassAlarm
             // 
             this.chkPassAlarm.AutoSize = true;
-            this.chkPassAlarm.Location = new System.Drawing.Point(618, 23);
+            this.chkPassAlarm.Location = new System.Drawing.Point(607, 12);
             this.chkPassAlarm.Name = "chkPassAlarm";
             this.chkPassAlarm.Size = new System.Drawing.Size(88, 16);
             this.chkPassAlarm.TabIndex = 9;
             this.chkPassAlarm.Text = "알림창 생략";
             this.chkPassAlarm.UseVisualStyleBackColor = true;
             // 
+            // chkShowForm
+            // 
+            this.chkShowForm.AutoSize = true;
+            this.chkShowForm.Location = new System.Drawing.Point(607, 33);
+            this.chkShowForm.Name = "chkShowForm";
+            this.chkShowForm.Size = new System.Drawing.Size(72, 16);
+            this.chkShowForm.TabIndex = 9;
+            this.chkShowForm.Text = "점유하기";
+            this.chkShowForm.UseVisualStyleBackColor = true;
+            // 
             // frmSHG
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(726, 452);
+            this.Controls.Add(this.chkShowForm);
             this.Controls.Add(this.chkPassAlarm);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtGapTime);
@@ -239,6 +251,7 @@
         private System.Windows.Forms.TextBox txtGapTime;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkPassAlarm;
+        private System.Windows.Forms.CheckBox chkShowForm;
     }
 }
 

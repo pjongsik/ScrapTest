@@ -157,18 +157,35 @@ namespace NoticeForm
                                 }
                                 else
                                 {
+                                    if (chkShowForm.Checked)
+                                    {
+                                        //싸이트 점유하기
+                                        OpenForm(url, string.Format("{0}:{1}", selectedSite, new DateTime(searchDatre.Year, searchDatre.Month, searchDatre.Day).ToString("yyyy-MM-dd")));
+
+                                    }
+
                                     // 가능
                                     message = string.Format(displayMessage, selectedSite, searchDatre.Month, searchDatre.Day, "예약가능함. ○○○○○○○○○○○○○○○○");
 
                                     // 텔레그램
                                     TelegramHelper.SendMessageByTelegramBot(string.Format("{0}- {1}", message, url));
-
+                                    
+                                    
                                     if (chkPassAlarm.Checked == false)
                                     {
                                         if (MessageBox.Show(message, "확인", MessageBoxButtons.YesNo) == DialogResult.Yes)
                                         {
                                             // 바로가기 
                                             System.Diagnostics.Process.Start(url);
+                                        }
+                                    }
+
+                                    if (chkShowForm.Checked)
+                                    {
+                                        if (MessageBox.Show("걔속 조회할까요?", "확인", MessageBoxButtons.YesNo) == DialogResult.None)
+                                        {
+                                            _keepRunning = false;
+                                            break;
                                         }
                                     }
                                 }
@@ -192,6 +209,12 @@ namespace NoticeForm
                 // 선택된 날짜 모두 확인후 대기후 시작
                 Thread.Sleep(gapTime);
             }
+        }
+
+        private void OpenForm(string url, string siteDate)
+        {
+            var form = new frmWebBrowser(url, siteDate);
+            form.Show();
         }
 
         void CrearDisplayText()
