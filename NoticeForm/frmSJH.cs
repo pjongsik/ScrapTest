@@ -12,39 +12,25 @@ namespace NoticeForm
 {
     public partial class frmSJH : Form
     {
-        string _month = "8";
-        int _year = 2019;
-        int _day = 0;
         bool _keepRunning = false;
         int _reservationPossible = 0;
         const int _showWebCount = 2;
-       // frmNotice _frm= new frmNotice();
-
+       
         public frmSJH()
         {
             InitializeComponent();
-           
-            // 
-            txtday.Text = DateTime.Now.AddDays(1).Day.ToString();
-            
-
-            cbbMonth.Items.Clear();
-            for (int i = 1; i < 13; i++)
-            {
-                cbbMonth.Items.Add(i);
-            }
-
-            cbbMonth.Text = DateTime.Now.AddDays(1).Month.ToString();
-            cbSite.SelectedIndex = 0;
+            InitiallzeControls();
         }
 
+        private void InitiallzeControls()
+        {
+            cbSite.SelectedIndex = 0;
+            dtpDate.MinDate = DateTime.Now.Date;
+        }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
-            //
-            //DoProcess();
         }
 
         Thread _th1 = null;
@@ -279,30 +265,35 @@ namespace NoticeForm
                 MessageBox.Show("중지 후 추가가능합니다.");
                 return;
             }
-            
-            if (string.IsNullOrEmpty(cbbMonth.Text)
-                || string.IsNullOrEmpty(txtday.Text)
-                || string.IsNullOrEmpty(cbSite.Text))
+
+            if (string.IsNullOrEmpty(cbSite.Text))
             {
-                MessageBox.Show("날짜 및 사이트 선택오류~!");
+                MessageBox.Show("사이트를 선택해주십시오!");
                 return;
             }
 
-            int year = DateTime.Now.Year;
-            int month = int.Parse(cbbMonth.Text);
-            int day = int.Parse(txtday.Text);
+            // dtpDate
+            DateTime selectedDate = dtpDate.Value.Date;
 
-            if (new DateTime(year, month, day) <= DateTime.Now.Date)
-                MessageBox.Show("날짜 선택오류 - 내일부터 선택가능~!");
+            if (selectedDate < DateTime.Now.Date)
+                MessageBox.Show("날짜 선택오류 - 오늘부터 선택가능합니다.");
 
-            SiteType stieType = (SiteType)cbSite.SelectedIndex;
+            int year = selectedDate.Year;
+            int month = selectedDate.Month;
+            int day = selectedDate.Day;
             
+            SiteType siteType = (SiteType)cbSite.SelectedIndex;
+
+            // 동일 내용존재여부확인
+            if (_selectedList.Any(x => x.Year == year && x.Month == month && x.Day == day && (x.Site == SiteType.전체 || x.Site == siteType)))
+                return;
+
             _selectedList.Add(new SelectionBase()
             {
                 Year = year,
                 Month = month,
                 Day = day,
-                Site = stieType
+                Site = siteType,
             });
 
             SetDataSource();
@@ -324,7 +315,4 @@ namespace NoticeForm
             SetDataSource();
         }
     }
-
-  
-  
 }

@@ -13,27 +13,19 @@ namespace NoticeForm
     public partial class frmSHG : Form
     {
         bool _keepRunning = false;
-        int _reservationPossible = 0;
         const int _showWebCount = 2;
        
         public frmSHG()
         {
             InitializeComponent();
-           
-            // 
-            txtday.Text = DateTime.Now.AddDays(1).Day.ToString();
-            
-
-            cbbMonth.Items.Clear();
-            for (int i = 1; i < 13; i++)
-            {
-                cbbMonth.Items.Add(i);
-            }
-
-            cbbMonth.Text = DateTime.Now.AddDays(1).Month.ToString();
-            cbSite.SelectedIndex = 0;
+            InitiallzeControls();
         }
 
+        private void InitiallzeControls()
+        {
+            cbSite.SelectedIndex = 0;
+            dtpDate.MinDate = DateTime.Now.Date;
+        }
 
         protected override void OnLoad(EventArgs e)
         {
@@ -100,7 +92,20 @@ namespace NoticeForm
 
                     // 1. 날짜 찾기 
                     // 2. 구역 찾기 
-                    foreach (var searchDatre in _selectedList.Where(x => x.Year == data.Year && x.Month == data.Month).OrderBy(x=> x.Day))
+                    var dayList = (from x in _selectedList
+                                    where x.Year == data.Year && x.Month == data.Month
+                                    group x by x.Day into grp
+                                    orderby grp.Key
+                                    select new SelectionSHG()
+                                        {
+                                            Year = data.Year,
+                                            Month = data.Month,
+                                            Day = grp.Key,
+                                        }
+                                    ).ToList();
+
+                    //foreach (var searchDatre in _selectedList.Where(x => x.Year == data.Year && x.Month == data.Month).OrderBy(x=> x.Day)
+                    foreach (var searchDatre in dayList) 
                     {
                         // 구분자
                         const string startBlockTag = "<TD style='padding:5px;'>";
@@ -128,11 +133,15 @@ namespace NoticeForm
                         else
                             temp = html;
 
-                        //
+                        // site 확인 
+                        var siteList = _selectedList.Where(x => x.Year == data.Year && x.Month == data.Month && x.Day == searchDatre.Day).Select(x => x.Site).ToList();
+
                         var sites = new string[] { "A", "B", "C", "D", "E" };
-                        if ((int)searchDatre.Site != 0) // 전체
+
+                        // 전체 없는경우
+                        if (siteList.Any(x => x == SiteTypeSHG.전체) == false) 
                         {
-                            sites = new string[] { searchDatre.Site.ToString() };
+                            sites = siteList.Select(x => x.ToString()).ToArray();
                         }
 
                         foreach (var selectedSite in sites)
@@ -157,19 +166,17 @@ namespace NoticeForm
                                 }
                                 else
                                 {
-                                    if (chkShowForm.Checked)
-                                    {
-                                        //싸이트 점유하기
-                                        OpenForm(url, string.Format("{0}:{1}", selectedSite, new DateTime(searchDatre.Year, searchDatre.Month, searchDatre.Day).ToString("yyyy-MM-dd")));
-
-                                    }
-
                                     // 가능
                                     message = string.Format(displayMessage, selectedSite, searchDatre.Month, searchDatre.Day, "예약가능함. ○○○○○○○○○○○○○○○○");
 
                                     // 텔레그램
                                     TelegramHelper.SendMessageByTelegramBot(string.Format("{0}- {1}", message, url));
-                                    
+
+                                    if (chkShowForm.Checked)
+                                    {
+                                        //싸이트 점유하기
+                                        OpenForm(url, string.Format("{0}:{1}", selectedSite, new DateTime(searchDatre.Year, searchDatre.Month, searchDatre.Day).ToString("yyyy-MM-dd")));
+                                    }
                                     
                                     if (chkPassAlarm.Checked == false)
                                     {
@@ -177,15 +184,6 @@ namespace NoticeForm
                                         {
                                             // 바로가기 
                                             System.Diagnostics.Process.Start(url);
-                                        }
-                                    }
-
-                                    if (chkShowForm.Checked)
-                                    {
-                                        if (MessageBox.Show("걔속 조회할까요?", "확인", MessageBoxButtons.YesNo) == DialogResult.None)
-                                        {
-                                            _keepRunning = false;
-                                            break;
                                         }
                                     }
                                 }
@@ -214,7 +212,7 @@ namespace NoticeForm
         private void OpenForm(string url, string siteDate)
         {
             var form = new frmWebBrowser(url, siteDate);
-            form.Show();
+            form.ShowDialog();
         }
 
         void CrearDisplayText()
@@ -288,8 +286,6 @@ namespace NoticeForm
 
         private void btns_Click(object sender, EventArgs e)
         {
-            _reservationPossible = 0;
-
             if (_selectedList.Count == 0)
             {
                 MessageBox.Show("선택된 내용이 없네요");
@@ -325,30 +321,35 @@ namespace NoticeForm
                 MessageBox.Show("중지 후 추가가능합니다.");
                 return;
             }
-            
-            if (string.IsNullOrEmpty(cbbMonth.Text)
-                || string.IsNullOrEmpty(txtday.Text)
-                || string.IsNullOrEmpty(cbSite.Text))
+
+            if (string.IsNullOrEmpty(cbSite.Text))
             {
-                MessageBox.Show("날짜 및 사이트 선택오류~!");
+                MessageBox.Show("사이트를 선택해주십시오!");
                 return;
             }
 
-            int year = DateTime.Now.Year;
-            int month = int.Parse(cbbMonth.Text);
-            int day = int.Parse(txtday.Text);
+            // dtpDate
+            DateTime selectedDate = dtpDate.Value.Date;
 
-            if (new DateTime(year, month, day) <= DateTime.Now.Date)
-                MessageBox.Show("날짜 선택오류 - 내일부터 선택가능~!");
+            if (selectedDate < DateTime.Now.Date)
+                MessageBox.Show("날짜 선택오류 - 오늘부터 선택가능합니다.");
 
-            SiteTypeSHG stieType = (SiteTypeSHG)cbSite.SelectedIndex;
-            
+            int year = selectedDate.Year;
+            int month = selectedDate.Month;
+            int day = selectedDate.Day;
+
+            SiteTypeSHG siteType = (SiteTypeSHG)cbSite.SelectedIndex;
+
+            // 동일 내용존재여부확인
+            if (_selectedList.Any(x => x.Year == year && x.Month == month && x.Day == day && (x.Site == SiteTypeSHG.전체 || x.Site == siteType)))
+                return;
+
             _selectedList.Add(new SelectionSHG()
             {
                 Year = year,
                 Month = month,
                 Day = day,
-                Site = stieType
+                Site = siteType,
             });
 
             SetDataSource();

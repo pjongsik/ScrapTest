@@ -34,10 +34,8 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.종료ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtday = new System.Windows.Forms.TextBox();
             this.btns = new System.Windows.Forms.Button();
             this.btne = new System.Windows.Forms.Button();
-            this.cbbMonth = new System.Windows.Forms.ComboBox();
             this.cbSite = new System.Windows.Forms.ComboBox();
             this.listSelection = new System.Windows.Forms.ListBox();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -46,6 +44,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.chkPassAlarm = new System.Windows.Forms.CheckBox();
             this.chkShowForm = new System.Windows.Forms.CheckBox();
+            this.dtpDate = new System.Windows.Forms.DateTimePicker();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -85,16 +84,9 @@
             this.종료ToolStripMenuItem.Text = "종료";
             this.종료ToolStripMenuItem.Click += new System.EventHandler(this.종료ToolStripMenuItem_Click);
             // 
-            // txtday
-            // 
-            this.txtday.Location = new System.Drawing.Point(151, 18);
-            this.txtday.Name = "txtday";
-            this.txtday.Size = new System.Drawing.Size(47, 21);
-            this.txtday.TabIndex = 1;
-            // 
             // btns
             // 
-            this.btns.Location = new System.Drawing.Point(419, 20);
+            this.btns.Location = new System.Drawing.Point(427, 20);
             this.btns.Name = "btns";
             this.btns.Size = new System.Drawing.Size(75, 23);
             this.btns.TabIndex = 2;
@@ -104,25 +96,13 @@
             // 
             // btne
             // 
-            this.btne.Location = new System.Drawing.Point(500, 19);
+            this.btne.Location = new System.Drawing.Point(508, 20);
             this.btne.Name = "btne";
             this.btne.Size = new System.Drawing.Size(75, 23);
             this.btne.TabIndex = 3;
             this.btne.Text = "중지";
             this.btne.UseVisualStyleBackColor = true;
             this.btne.Click += new System.EventHandler(this.btne_Click);
-            // 
-            // cbbMonth
-            // 
-            this.cbbMonth.FormattingEnabled = true;
-            this.cbbMonth.Items.AddRange(new object[] {
-            "7",
-            "8",
-            "9"});
-            this.cbbMonth.Location = new System.Drawing.Point(104, 19);
-            this.cbbMonth.Name = "cbbMonth";
-            this.cbbMonth.Size = new System.Drawing.Size(41, 20);
-            this.cbbMonth.TabIndex = 4;
             // 
             // cbSite
             // 
@@ -152,7 +132,7 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(204, 19);
+            this.btnAdd.Location = new System.Drawing.Point(224, 19);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(62, 23);
             this.btnAdd.TabIndex = 2;
@@ -162,7 +142,7 @@
             // 
             // btnDel
             // 
-            this.btnDel.Location = new System.Drawing.Point(272, 20);
+            this.btnDel.Location = new System.Drawing.Point(290, 19);
             this.btnDel.Name = "btnDel";
             this.btnDel.Size = new System.Drawing.Size(62, 23);
             this.btnDel.TabIndex = 2;
@@ -172,7 +152,7 @@
             // 
             // txtGapTime
             // 
-            this.txtGapTime.Location = new System.Drawing.Point(340, 22);
+            this.txtGapTime.Location = new System.Drawing.Point(354, 20);
             this.txtGapTime.Name = "txtGapTime";
             this.txtGapTime.Size = new System.Drawing.Size(36, 21);
             this.txtGapTime.TabIndex = 7;
@@ -181,7 +161,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(382, 27);
+            this.label1.Location = new System.Drawing.Point(391, 25);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(17, 12);
             this.label1.TabIndex = 8;
@@ -207,23 +187,29 @@
             this.chkShowForm.Text = "점유하기";
             this.chkShowForm.UseVisualStyleBackColor = true;
             // 
+            // dtpDate
+            // 
+            this.dtpDate.Location = new System.Drawing.Point(104, 19);
+            this.dtpDate.Name = "dtpDate";
+            this.dtpDate.Size = new System.Drawing.Size(112, 21);
+            this.dtpDate.TabIndex = 10;
+            // 
             // frmSHG
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(726, 452);
+            this.Controls.Add(this.dtpDate);
             this.Controls.Add(this.chkShowForm);
             this.Controls.Add(this.chkPassAlarm);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtGapTime);
             this.Controls.Add(this.listSelection);
             this.Controls.Add(this.cbSite);
-            this.Controls.Add(this.cbbMonth);
             this.Controls.Add(this.btne);
             this.Controls.Add(this.btnDel);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.btns);
-            this.Controls.Add(this.txtday);
             this.Controls.Add(this.richTextBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmSHG";
@@ -240,10 +226,8 @@
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 종료ToolStripMenuItem;
-        private System.Windows.Forms.TextBox txtday;
         private System.Windows.Forms.Button btns;
         private System.Windows.Forms.Button btne;
-        private System.Windows.Forms.ComboBox cbbMonth;
         private System.Windows.Forms.ComboBox cbSite;
         private System.Windows.Forms.ListBox listSelection;
         private System.Windows.Forms.Button btnAdd;
@@ -252,6 +236,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkPassAlarm;
         private System.Windows.Forms.CheckBox chkShowForm;
+        private System.Windows.Forms.DateTimePicker dtpDate;
     }
 }
 
