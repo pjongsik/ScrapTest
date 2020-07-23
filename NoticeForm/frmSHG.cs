@@ -141,7 +141,7 @@ namespace NoticeForm
                         // 전체 없는경우
                         if (siteList.Any(x => x == SiteTypeSHG.전체) == false) 
                         {
-                            sites = siteList.Select(x => x.ToString()).ToArray();
+                            sites = siteList.OrderBy(x => x).Select(x => x.ToString()).ToArray();
                         }
 
                         foreach (var selectedSite in sites)
